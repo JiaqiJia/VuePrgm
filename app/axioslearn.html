@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>练习使用axios.js</title>
+
+    <script src="../script/vue.js"></script>
+    <script src="../script/axios.js"></script>
+
+</head>
+<body>
+    <div id="app">
+        <input type="button" value="点击" title="实验的button">
+        
+    </div>
+
+    <script>
+        //程序环境搭建：
+        var test = new Vue({
+            el: "#app",
+            data: {
+                message: "显示内容"
+            }
+        })
+
+        // 2.1 使用axios框架
+        // 2.2 学习使用JSON解析
+        //Promise教程地址： https://www.bilibili.com/video/av75041024?from=search&seid=8714593936565971216  (https://www.bilibili.com/video/av75041024)
+        //Axios教程地址：   https://www.bilibili.com/video/av71987780?from=search&seid=10958499840519641616 (https://www.bilibili.com/video/av75039519)
+
+        //Json API （使用JSON-Server 建立）：localhost:8989
+
+        /*
+            异步的层级关系：
+            XMLHttpRequest
+            ||
+            Promise
+            ||
+            axios
+        */
+
+        //============================================
+        //XMLHttpRequest 接口的属性与方法
+
+        function Fn(a, b, c) {
+            this.a = a;
+            this.b = b;
+            this.c = c;
+            return this;
+        }
+        var a = 1, b = 2, c = 3;
+        const fn = new Fn(a, b, c);
+        console.log(Fn.prototype);
+
+
+
+
+        //============================================
+        //使用Promise
+        //区别 函数对象 与 实例对象
+
+        //两种回调函数： 同步调用，异步调用
+
+        //1. 同步回调函数
+        const arr = [1,2,3,4,5,6];
+        arr.forEach(item => {
+            console.log(item);
+        });
+
+        //2. 异步回调函数
+        setTimeout(() => {
+            console.log("timeout callback()");
+        }, 0);
+
+
+        //JS里的Error处理
+        //常见的内置错误：
+        //ReferenceError 变量不存在
+        //TypeError 数据类型不正确
+        //RangeError 数值不在允许的范围内
+        //SyntaxError 语法错误
+        //============================================
+        //错误的处理
+        //捕获错误： try ... catch ...
+        //抛出错误： throw error
+        try {
+            let d;
+            console.log(d.xxx);
+        } catch(err) {
+            console.log(err);
+        }
+
+        //或者
+
+        try {
+            throw new Error('错误发生');
+        }catch(err) {
+            console.log(err.message);
+        }
+
+        //===========使用Promise===========
+        //概念： Promise是JS中解决异步编程的新的解决方案
+        //Promise是一个构造函数
+        //promise对象封装一个异步操作并可以获取其结果
+        /*
+        promise状态的改变：
+                    ~~>(fulfill) settled  --成功结果数据：value
+        pending ~~
+                    ~~>(reject) settled  --失败的结果数据：reason
+        ****只有这两种变化
+        */
+
+
+        //============================================
+        //使用Axios
+
+
+
+    </script>
+</body>
+</html>

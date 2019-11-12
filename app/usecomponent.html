@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>练习创建组件</title>
+
+    <script src="../script/vue.js"></script>
+</head>
+
+<body>
+    <div id="app">
+        <my-com1></my-com1>
+    </div>
+    <template id="temp1">
+        <div>
+            <h1>开头是这样</h1>
+            <p>随便写点什么</p>
+            <ol>
+                <li>老虎</li>
+                <li>大象</li>
+                <li>狮子</li>
+            </ol>
+        </div>
+    </template>
+    <script>
+        //创建全局组件
+        //也可以将 Vue.extend 直接放到 Vue.component 注册
+        //或者将 Vue.extend 省略为一个 对象参数
+        //template 可以作为独立标签在页面中编写，但是组件中template属性需要引用id值
+
+        var comp = Vue.extend({
+            template: '#temp1'
+        })
+
+        Vue.component('my-com1', comp);
+
+        var vm = new Vue({
+            el: '#app',
+            data: {},
+            methods: {},
+            //创建私有组件
+             
+        })
+    </script>
+</body>
+
+</html>

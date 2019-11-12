@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>VUE.JS第二部分 Vue指令</title>
+
+    <script src="../script/vue.js"></script>
+</head>
+
+<body>
+    <!-- for循环 -->
+    <!-- 1. 迭代数组 
+            <p v-for='(item,i) in items'>{{}}</p>-->
+    <!-- 2. 迭代对象 
+            <p v-for='(val,key,i) in obj'>{{}}</p>-->
+    <!-- 3. 迭代数字 
+            <p v-for='i in num'>{{i}}</p>
+            **遍历数字时数字从一开始-->
+    
+    <!-- 2.2.0版本中， 在组件中使用v-for，key是必须的 -->
+    <!-- 使用key的时候，必须用v-bind绑定， key值属性必须是number/string-->
+    <!-- e.g. <p v-for='item in items' :key='item.id'></p> -->
+
+    <div id="app1">
+        <p v-for="item in list">{{item}}</p>
+        <p></p>
+    </div>
+    <hr>
+
+    <!-- Vue中的v-if和v-show -->
+    <!-- v-if 和v-show 的差别，
+        v-if的条件为否时，元素是不加入到DOM中的，而v-show只是控制显示与否
+        建议在频繁显示，隐藏的情况下使用v-show, 而不频繁时可以考虑v-if -->
+    <div id="app2">
+        <p v-if="flag">由v-if来决定</p>
+        <p v-show="flag">由v-show来决定</p>
+    </div>
+
+
+
+    <script>
+        var vm = new Vue({
+            el: "#app1",
+            data: {
+                list: [1,2,3,4,5,6]
+            }
+        })
+
+        var vm2 =new Vue({
+            el: '#app2',
+            data: {
+                flag: true
+            }
+        })
+
+    </script>
+
+
+</body>
+</html>

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title></title>
+    <script src="script/vue.js" type="text/javascript" charset="utf-8"></script>
+</head>
+
+<body>
+    <div id="app">
+        {{message}}
+    </div>
+
+    <div id="app-4">
+        <ol>
+            <li v-for="todo in todos">
+                {{todo.text}}
+            </li>
+        </ol>
+    </div>
+
+    <div id="app-7">
+        {{my.a}}
+    </div>
+
+    <script type="text/javascript">
+        
+        var temp1 = {a: 'Hello'};
+        var temp2 = {a: 'Bonjour'};
+
+        var app = new Vue({
+            el: '#app',
+            data: {
+                message: 'Hello Vue!'
+            },
+            computed: {
+                reverse: function(){
+                    return this.message.split('').reverse().join('');
+                }
+            },
+        });
+
+        var app4 = new Vue({
+            el: '#app-4',
+            data: {
+                todos: [
+                    { text: 'Learn Javascript'},
+                    { text: 'Learn Vue'},
+                    { text: 'Start an awsome project'}
+                ]
+            }
+        });
+
+        var app7 = new Vue({
+            el: '#app-7',
+            data: {
+                my: temp1,
+                your: temp2
+            }
+        })
+
+        console.log(app7.my.a);
+        temp1.a = 'OhaYo';
+        console.log(app7.my.a);
+    </script>
+</body>
+
+</html>

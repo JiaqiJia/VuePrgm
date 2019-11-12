@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Hello</title>
+        <script src="script/vue.js"></script>
+    </head>
+    <body>
+        <div id="show">
+            <person-name 
+                v-for='person in persons'
+                v-bind:person='person'></person-name>
+        </div>
+        <hr/>
+        <div id="cplx-ins">
+            {{songs[1]}}
+        </div>
+        <hr/>
+        <div id="ex1">
+            {{show}}
+        </div>
+        <p id="ee"></p>
+
+        <div id="ex2"></div>
+
+        <script>
+            //======================================================
+            //Following try is to test how to register and 
+            //use a component with parent element.
+            Vue.component('person-name', {
+                props: ['person'],
+                template: '\
+                <div class="person">\
+                    <h5>{{person.name}}</h5>\
+                </div>'
+            })
+
+            var x = new Vue({
+                el: '#show',
+                data: {
+                    persons: [{name: 'Amely'},
+                    {name: 'Paul'},
+                    {name: 'Johnes'}]
+                }
+            });
+            
+            //======================================================
+            //Practice some easy Vue features.
+            var ease = 10;
+
+            var ex1 = new Vue({
+                el: '#ex1',
+                data: {
+                    show: ease
+                },
+
+                beforeCreate: function () {
+                    var node = document.createElement('p');
+                    var th = document.getElementById('ex1');
+                    node.innerHTML = "实例创建前。。。";
+                    th.appendChild(node);
+                },
+                created: function () {
+                    var node = document.createElement('p');
+                    var th = document.getElementById('ex1');
+                    node.innerHTML = "实例创建前完成！";
+                    th.appendChild(node);
+                },
+                /*beforeMount: function () {
+                    var node = document.createElement('p');
+                    var th = document.getElementById('ex1');
+                    node.innerHTML = "挂载元素前。。。";
+                    th.appendChild(node);
+                },*/
+                //在挂载开始之前被调用：相关的渲染函数首次被调用
+	beforeMount : function(){
+		console.log('beforeMount');
+                    var th = document.getElementById('ee');
+                    th.innerHTML = "挂载元素前。。。";
+
+	},
+                mounted: function () {
+                    var node = document.createElement('p');
+                    var th = document.getElementById('ex1');
+                    node.innerHTML = "元素挂载完成。";
+                    th.appendChild(node);
+                    console.log(this);
+                },
+                beforeUpdate: function () {
+                    var node = document.createElement('p');
+                    var th = document.getElementById('ex1');
+                    node.innerHTML = "数值变了。。。";
+                    th.appendChild(node);
+                },
+                updated: function () {
+                    var node = document.createElement('p');
+                    var th = document.getElementById('ex1');
+                    node.innerHTML = "值已经更新！";
+                    th.appendChild(node);
+                },
+            })
+            
+            //======================================================
+            //write a complex Vue instance, including 
+            //all so-far-learned features in it
+            /*
+             *the instance should include:
+              el
+              data
+              lifecycle hook
+              some 模板语法
+              计算属性
+              侦听器
+            */
+            
+            function Info(name, album, artist, leng, size, lang, year){
+                this.name = name;
+                this.album = album;
+                this.artist = artist;
+                this.leng = leng;
+                this.size = size;
+                this.lang = lang;
+                this.year = year;
+            }
+
+            function Song(info, lyric, pic){
+                this.info = info;
+                this.lyric = lyric;
+                this.pic = pic;
+            }
+
+            var songArr = [
+                new Song(new Info('Let\'s go','alb1','Ammy',234,1234,'EN',2018),
+                            'some easy lyric.....111',
+                            'somg1.pic'),
+                new Song(new Info('Melody','alb2','Bill',124,4334,'EN',2010),
+                            'some easy lyric.....222',
+                            'somg2.pic'),
+                new Song(new Info('Lion','alb3','Lush',434,2234,'FR',2015),
+                            'some easy lyric.....333',
+                            'somg3.pic'),
+                new Song(new Info('HHHHH','alb4','Zhong',412,452,'CN',2013),
+                            'some easy lyric.....444',
+                            'somg1.pic'),
+            ];
+
+            var complexInstance = new Vue({
+                el: '#cplx-ins',
+                data: {
+                    songs: songArr,
+                    itemsNum: 4,
+                    owner: "theStore"
+                },
+
+                beforeCreate: function(){
+                    console.log('正在载入歌曲。。。');
+                },
+
+                created: function() {
+                    console.log('全部歌曲完成载入！');                    
+                }
+            })
+
+        </script>
+    </body>
+</html>

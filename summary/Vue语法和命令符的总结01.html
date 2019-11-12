@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Vue学习第一部分的总结</title>
+    <script src="../script/vue.js"></script>
+
+    <style>
+        .active {
+            color: red;
+            font-size: 150%;
+        }
+
+        .hibernate {
+            color: darkslateblue;
+            font-style: italic;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- 1. {{}}实例属性引用可以插入到静态的内容当中，
+        但当使用 ‘v-text’ 命令时会改变元素内所有的内容 -->
+
+    <!-- ‘v-html’ 命令会将字符串中的html元素与语法提出并解析 -->
+    <!-- 注：v指令必须在html标签中使用。 -->
+
+    <!-- v-once 指令。确保绑定的标签只渲染一次，变量再改变时，标签不再响应。 -->
+
+    <div id="app">
+        <h2>模板语法</h2>
+        <p>本段中嵌入--<span v-html="txt1"></span>--嵌入结束</p>
+        <p><span v-once>{{num1}}</span></p>
+    </div>
+    <!-- 用于生命周期钩子绑定 -->
+    <div id="independ">
+        <p id="p1"></p>
+        <p id="p2"></p>
+        <p id="p3"></p>
+        <p id="p4"></p>
+        <p id="p5"></p>
+        <p id="p6"></p>
+    </div>
+    <hr>
+    
+    <!-- 2. v-bind 指令用来绑定属性值 -->
+
+    <!-- 有简写形式 ":" 当使用 e.g. v-bind:class= 绑定了一个属性时
+        等号的后面可以直接加入实例中的属性变量。 变量的值就和属性的值绑定。 -->
+    <!-- 对于Vue中的数据绑定，除了属性键值，还可以使用js表达式
+            但是，只能是单个表达式，这种单句表达式被称作模板表达式 -->
+    <!--    e.g.可以使用表达式的地方：
+            {{ number + 1 }} 或 
+            {{ ok ? 'YES' : 'NO' }}
+            {{ message.split('').reverse().join('') }}
+            <div v-bind:id="'list-' + id"></div> -->
+    
+    <!-- ！！不能是语句或控制流。 -->
+
+    
+    <!-- 3. 动态参数 （2.6.0之后新增） -->
+    <!-- 使用[]包裹参数名，参数的最终值就是加入到标签中的属性 -->
+    <!-- []动态参数一般和 v-bind 指令共同使用 -->
+
+    <!-- 4. 使用 v-on 来绑定事件 -->
+    <!-- 5. 测试中可能用到的定时器 -->
+    <!-- 6. 在VM实例中，想要获取或者调用methods方法，必须通过this. 为前缀来进行访问。
+        this指的就是当前的VM实例 -->
+
+    <!-- 7. 使用v-on的事件修饰符 -->
+    <!-- 事件修饰符可以串联使用 -->
+    <!-- .stop      阻止冒泡
+            //冒泡机制，子元素的触发事件会向上传递给父元素，stop可以阻止冒泡
+
+         .prevent   阻止默认事件
+         .capture   添加事件监听器时使用事件捕获模式
+            //捕获机制，与冒泡机制顺序相反，是从外到里的。
+         .self      只当事件在该元素本身触发时触发回调，不再有冒泡或者捕获等
+         .once      事件只触发一次-->
+    <!-- stop 与self 的差别
+        .stop 遇到该修饰符，冒泡行为会被阻止，不再向上层继续执行
+        .self 只保证自己元素本身不执行，并不影响冒泡向上传递
+    -->
+
+    <!-- 8. v-model 实现双向数据绑定 -->
+    <!-- v-bind 只实现单向绑定，即从M -> V
+        直接在可交互的标签：input text 中加入 v-model标签
+        v-model 只能用在表单元素中，例如：
+        input, select, checkbox,textarea -->
+    <div id="app2">
+        <p :[atrbt]='content'>Show text here.</p>
+        <p>{{msg}}</p>
+        <button v-on:click="lang">点击</button>
+        <button v-on:click="stop">停止</button>
+
+        <hr>
+        <input type="text" v-model="msg" style="width:100%;"></input>
+
+    </div>
+    <!-- 注意，动态参数的预期值是一个字符串，异常时值为null，null会解除绑定 -->
+
+
+    <!-- 9. 样式绑定 ，实用类的时候，类名必须以字符串的形式传递给属性绑定 :class -->
+    <!-- 在内联样式中，既可以使用数组也可以使用对象传递样式类 -->
+    <!-- 在对象中，对象属性可以带属性，也可以不带 -->
+
+    <!-- 10. 内联样式， 即绑定标签的 :style 属性 -->
+    <!-- ***在对象中属性键值对的属性名如果有连字符"-",该属性名必须用双引号包裹 -->
+    <!-- 传递内联样式的三种方法： -->
+    <!-- （1） 直接创建对象 -->
+    <!-- （2） 在data中创建样式对象，再引用该对象 -->
+    <!-- （3） 在data中创建多个对象，再以数组的形式引用 -->
+
+    <div id="app3">
+        <!-- 使用对象的方式来决定是否加入样式类 -->
+        <h1 :class="[{active:flag}, {'hibernate':nFlag}]">实验标题</h1>
+        <p><button @click="swithStatus">点击</button></p>
+    </div>
+
+
+
+    <script>
+        //==========================================================================
+        var vm = new Vue({
+            el: '#app',
+            data: {
+                txt1: "<span>片段中显示的内容</span>",
+                num1: 100
+            },
+
+            beforeCreate() {
+                document.getElementById('p1').innerHTML = '准备创建';
+            },
+            created() {
+                document.getElementById('p2').innerHTML = '创建好了，数据 Ready!';
+            },
+            beforeMount () {
+                document.getElementById('p3').innerHTML = '元素已准备好，准备注入';
+            },
+            mounted () {
+                document.getElementById('p4').innerHTML = '绑定完成';                
+            }
+            
+        })
+
+        //==========================================================================
+
+        var vm2 = new Vue({
+            el: "#app2",
+            data: {
+                atrbt: "class",
+                content: "active",
+                msg: "春天里小朋友去郊游！",
+                intervalID: null
+            },
+            methods: { //methods属性中定义了当前Vue实例所有可用的方法
+                show: function(){
+                    alert("Hello");
+                },
+
+                lang(){
+                    //箭头函数中内部的this永远和外部的保持一致
+
+                    //使用条件语句来决定是否开启新的定时器
+                    if (this.intervalID != null) {
+                        return;                        
+                    }
+                    this.intervalID = setInterval( () => {
+                        var start = this.msg.substring(0,1);
+                        var end = this.msg.substring(1);
+                        this.msg = end + start
+                    }, 400)
+                },
+
+                stop(){
+                    clearInterval(this.intervalID);
+                    this.intervalID = null;
+                }
+            }
+        })
+        
+        //==========================================================================
+        
+        var vm3 = new Vue({
+            el:"#app3",
+            data: {
+                flag: true,
+                nFlag: false
+            },
+            methods: {
+                swithStatus() {
+                    var temp = this.flag;
+                    this.nFlag = temp;
+                    this.flag = !this.nFlag; 
+                }
+            }
+        })
+
+
+
+        console.log(vm.num1 = [1,2,3,4,5]);
+    </script>
+    
+</body>
+
+</html>

@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Hello!</title>
+    <script src="../script/vue.js"></script>
+
+    <style>
+        .red {
+            color: darkkhaki;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- 1.常用的几种渲染标签 -->
+    <!-- v-bind, v-text, v-html, v-cloak 的使用 -->
+
+    <!-- 2. 使用v-on来绑定事件 -->
+    <!-- v-on 用来绑定事件 -->
+    <!-- v-on 的缩写是@
+        v-bind 的缩写是：-->
+
+    <!-- 3. 使用v-on的事件修饰符 -->
+    <!-- 事件修饰符可以串联使用 -->
+    <!-- .stop      阻止冒泡
+            //冒泡机制，子元素的触发事件会向上传递给父元素，stop可以阻止冒泡
+
+         .prevent   阻止默认事件
+         .capture   添加事件监听器时使用事件捕获模式
+            //捕获机制，与冒泡机制顺序相反，是从外到里的。
+         .self      只当事件在该元素本身触发时触发回调，不再有冒泡或者捕获等
+         .once      事件只触发一次-->
+    <!-- stop 与self 的差别
+        .stop 遇到该修饰符，冒泡行为会被阻止，不再向上层继续执行
+        .self 只保证自己元素本身不执行，并不影响冒泡向上传递
+    -->
+
+    <!-- 4. v-model 实现双向数据绑定 -->
+    <!-- v-bind 只实现单向绑定，即从M -> V
+        直接在可交互的标签：input text 中加入 v-model标签
+        v-model 只能用在表单元素中，例如：
+        input, select, checkbox,textarea -->
+
+    <div id="app">
+        <h4 v-text="msg"></h4>
+        <button name="Button" v-bind:title="mytitle" v-on:click='show'>{{mytitle}}</button>
+        <input type="button" value="Submit">
+        <!-- 跑马灯效果 -->
+        <hr />
+        <button v-on:click='start'>开始</button>
+        <button @click='stop'>停止</button>
+        <h4>{{scroll}}</h4>
+    </div>
+
+    <hr>
+    <h3>v-model学习</h3>
+    <div id="app2">
+        <a href="http://baidu.com" @click.prevent='linkClk'>打开百度</a>
+    </div>
+
+    <!-- 6.计算器实例 -->
+
+    <!-- 7.vue中的样式 -->
+    <!-- 通过改变类 来改变元素样式 -->
+    <!-- 使用 v-bind来绑定值到class属性。
+        可以使用数组，来赋值多个类，以字符串直接表示类名
+        或者使用三元运算符来决定是否同一类，或者用对象来封装 -->
+    <div id="app3" class="thin">
+
+    </div>
+
+    <!-- 8.使用内联样式 -->
+    <div id="app4">
+        <h1 :style='[styleObj1, styleObj2]'>大标题</h1>
+    </div>
+
+
+    <script>
+        var vm = new Vue({
+            el: '#app',
+            data: {
+                msg: 'message',
+                mytitle: '自己定义的属性',
+                scroll: "Welcome and enjoy!",
+                
+                intervalId: null
+            },
+
+            //在methods中如果要访问data中的数据必须带this
+            
+            methods: { //在methods中定义show方法
+                show: function () {
+                    alert('Hello');
+                },
+
+                //箭头函数保证内部的this指向与外部的保持一致
+                start() {
+                    if (this.intervalId != null) {
+                        return;
+                    };
+                    this.intervalId = setInterval(() => {
+                        var head = this.scroll.substring(0, 1);
+                        var rest = this.scroll.substring(1);
+                        this.scroll = rest + head;
+                    }, 200);
+
+                },
+                stop() {
+                    clearInterval(this.intervalId);
+                    //每当清除了interval之后需要把intervalId置为null
+                    this.intervalId = null;
+                }
+            }
+        })
+
+        var vm2 = new Vue({
+            el: '#app2',
+            data: {},
+            methods: {
+                linkClk() {
+                    console.log("打开百度")
+                }
+            }
+        })
+
+        var vm3 = new Vue({
+            el: "#app4",
+            data: {
+                styleObj1: {
+                    color: "red",
+                    "font-weight": 500
+                },
+                styleObj2: {
+                    'font-style': 'italic'
+                }
+            }
+        })
+    </script>
+</body>
+
+</html>

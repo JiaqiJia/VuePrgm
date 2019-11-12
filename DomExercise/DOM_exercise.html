@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>DOM 各属性练习</title>
+</head>
+
+<body>
+
+    <!--DOM 是HTML访问文档中个节点的标准方法，独立于任何编程语言-->
+    <!--有如下文档结构-->
+    <!--以下例子是由Emmet生成-->
+    <h1 id="mtitle">这是一个标题</h1>
+    <p id="content" class="con">内容在这里显示<span>额外内容</span></p>
+
+    <div id="parent">
+        <p id="me"><span id="child"></span></p>
+        <ul>
+            <li></li>
+        </ul>
+    </div>
+
+    <ul>
+        <li>item <a href="" id="it1"></a>
+            <a href="" id="it2"></a>
+            <a href="" id="it3"></a> 
+        </li>
+        <li>item <a href="" id="it1"></a>
+            <a href="" id="it2"></a>
+            <a href="" id="it3"></a> 
+        </li>
+        <li>item <a href="" id="it1"></a>
+            <a href="" id="it2"></a>
+            <a href="" id="it3"></a> 
+        </li>
+    </ul>
+
+
+    <script>
+
+        //两个概念： BOM 和 DOM
+        //BOM代表 Browser Object Model
+        //DOM代表 Document Object Model
+        //区别是 BOM 主要用于和浏览器互动， DOM 主要用于和文档互动
+
+
+        // 在Javascript中常用到的dom操作方法
+        var doc = document;
+        //document 对象是JS中对文档的直接引用，其中的一些方法可以访问到文档中的节点
+        // getElementById(id);
+        // getElementsByTagName();
+        // getElementByClassName();
+
+
+        // appendChild(node);
+        // removeChild(node);
+
+        //还有一些常用属性
+        // innerHTML
+        // parentNode
+        // childNodes
+        // attributes
+        // nodeName
+        // nodeValue
+        // nodeType
+
+        //暂停，之后抽时间完成
+
+    </script>
+
+</body>
+
+</html>

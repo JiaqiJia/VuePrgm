@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>实例：JS对象创建与闭包的用法</title>
+</head>
+<body>
+
+    <h1>JS Object创建的相关内容</h1>
+
+    <p id="cont">实例内容</p>
+
+    <input type="text" name="txt" id="txt1">
+    <button onclick="easyTell(easy)">tell</button>
+    <hr>
+
+    <h1>计数器实例</h1>
+    <div id="app2" class="main">
+        <p id="result">0</p>
+        <button onclick="add()">+1</button>
+        <button onclick="subtract()">-1</button>
+    </div>
+    <hr>
+
+    
+
+    <script>
+        // 学习计划：
+        // 1. JS 创建对象与闭包
+        // 2. 各内置类型的常用方法的汇总
+        // 3. JS DOM 
+        // 4. Browser BOM
+        //====>> 前往 ../app/axioslearn.html 继续
+
+        //=========================================
+        //创建一个实例对象
+        var easy = "Haha";
+        var customer = {
+            firstName: "Jack",
+            lastName: "Jones",
+            gender: "male",
+            nationality: "Britain",
+            age: 34,
+            hobby: "swimming",
+            temp: "",
+            //functions
+
+            wink: function(){
+                console.log("Can you help me?");
+            },
+
+            listen: function(infom){
+                this.temp = infom;
+                console.log("OK, this is what you told me:" + this.temp);
+            }
+
+        };
+        
+        var txt = "";
+
+        for(attr in customer){
+            txt += customer[attr];
+            txt += " ";
+        }
+
+        document.getElementById("cont").innerHTML = txt;
+
+        function tell(){
+            var temp = document.getElementById("txt1").value;
+            document.getElementById("cont").innerHTML = temp;
+            customer.listen(temp);
+        }
+
+        function easyTell(vocal){
+            document.getElementById("cont").innerHTML = vocal;
+        }
+
+        //=========================================
+        //计数器实例
+        var cal = {
+            counter: 0,
+            get reset(){
+                this.counter = 0;
+            },
+            get increment(){
+                this.counter++;
+            },
+            get decrement(){
+                this.counter--;
+            },
+            set add(value){
+                this.counter += value;
+            },
+            set subtract(value){
+                this.counter -= value;
+            }
+        }
+
+        //创建一个计算器构造器
+
+        function Cal(counter){
+            this.counter = counter;
+            this.reset = function(){this.counter = 0;};
+            Object.defineProperty(this,"increment",{get: function(){this.counter++;}});
+        }
+
+        var obj = new Cal(10);
+
+        //JS 的对象原型
+        //prototype 向已有的相同类型对象中加入新的属性时，可以使用prototype
+        //e.g. 之后添加
+
+        //=========================================
+        //======函数部分======
+        //箭头函数没有自己的this，不适合定义对象方法
+
+        //关于this，在JS中 this指的是拥有当前代码的对象。
+        //在函数中，this是拥有当前函数的对象。
+
+        //======函数闭包======
+        //嵌套函数的使用，由于JS中主要有两个作用域，即全局作用域和函数作用域
+        //函数作用域中嵌套函数可以实现局部变量的隐藏。
+
+        //使用自调用函数可以实现代码中一部分只运行一次，且函数的内部变量可以被隐藏。
+        //e.g.
+        var closureExp = (function(){
+            var init = 0;
+            return {
+                add: function(){ init++; return init;},
+                subtract: function(){init--; return init;},
+                reset: function(){init = 0;},
+                show: function(){return init;}
+            }
+        })();
+
+        function add(){
+            document.getElementById("result").innerHTML = closureExp.add();
+        }
+        function subtract(){
+            document.getElementById("result").innerHTML = closureExp.subtract();
+        }
+
+        //=========================================
+        //JS内置类型以及个内置类型常用方法汇总与示例
+        //参考资料，MDN 文档
+        //======>  https://developer.mozilla.org/zh-CN/
+
+        //内置类型：
+        //Array
+        //Object
+        //Function
+        //String
+        //Number
+        //Date
+        //Boolean
+        //Math
+        //===========暂停，之后完善=============
+
+
+    </script>
+</body>
+</html>

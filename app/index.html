@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>v指令整合项目</title>
+    
+    <script src="../script/vue.js"></script>
+    <link rel="stylesheet" href="../lib/bootstrap-3.4.1.css">
+
+</head>
+<body>
+    
+    <div id="app">
+        
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title">添加品牌</h3>
+            </div>
+            <div class="panel-body form-inline">
+                <label>
+                    Id:
+                    <input type="text" class="form-control" v-model='id'>
+                </label>                
+                <label>
+                    Name:
+                    <input type="text" class="form-control" v-model="name">
+                </label>
+                <input type="button" value="添加" class="btn btn-primary" @click='add()'>
+                <label>
+                    关键字：
+                    <input type="text" class="form-control" v-model="keywords" v-focus>
+                </label>
+            </div>
+        </div>
+        
+        <table class="table tablebordered table-hover table-striped">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Name</th>
+                    <th>Ctime</th>
+                    <th>Operation</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- 在时间部分使用Vue过滤器。 -->
+                <!-- 用作将一些常见的文本格式化 -->
+                <!-- 主要用于两个地方：mustache插值，v-bind表达式 -->
+                <!-- 使用管道符："|"表示 -->
+                <!-- 过滤器可以连接使用 -->
+                <!-- 过滤器可以传参数 -->
+                <tr v-for="(item,index) in search(keywords)" :key='index+1'>
+                    <td>{{ item.id }}</td>
+                    <td>{{ item.name }}</td>
+                    <td>{{ item.ctime | msgFormat }}</td>
+                    <td><button @click="del(item.id)">Delete</button></td>
+                </tr>
+            </tbody>
+        </table>
+        
+    </div>
+
+    <script>
+        //定义一个全局过滤器
+        Vue.filter('msgFormat', function (msg){  //除了第一个参数，剩下的参数都是传参数得到的
+            //第一个参数既可以是字符串，也可以是正则
+            //return msg.replace(/单纯/g,'邪恶')；
+
+            var dt = new Date(msg);
+            var y = dt.getFullYear();
+            var m = dt.getMonth() + 1;
+            var d = dt.getDay();
+
+            return `${y}-${m}-${d}`;
+        });
+
+        //定义全局的按键修饰符、
+        //Vue.config.keyCodes.{新加入名称} = {按键值}
+        //按键值对应表： https://blog.csdn.net/zhukui66/article/details/17436697
+        //新加入的修饰符可以用在@keyup /keydown 等键盘相关的方法后面
+
+        //定义全局的自定义指令 下面的例子定义一个 v-focus指令
+        //定义指令里有可用的钩子函数 以及相关参数
+        Vue.directive('focus', {
+            inserted: function(el){
+                el.focus();
+            }
+        })
+        //HTML元素的生命周期： 文件-> 解析-> 内存 ->DOM显示
+        //只有插入到DOM中才能执行元素行为
+
+        //指令函数的简写
+        //简写的时候，方法被同时传入 bind 和 update 里
+        /*
+        Vue.directiv('name', function())
+        */
+
+
+        var vm = new Vue({
+            el: "#app",
+            data: {
+                id: "0",
+                name: " ",
+                keywords: "",
+                list: [
+                    {id: 1, name: "奔驰", ctime: new Date()},
+                    {id: 2, name: "宝马", ctime: new Date()},
+                    {id: 3, name: "大众", ctime: new Date()},
+                    {id: 4, name: "丰田", ctime: new Date()}
+                ]
+            },
+            methods: {
+                add() {
+                    var obj = {id: parseInt(this.id), name: this.name, ctime:new Date()};
+                    this.list.push(obj);
+                    this.id = "";
+                    this.name = "";
+                },
+
+                del(id) {
+                    this.list.some((item,i) => {
+                        if (item.id == id) {
+                            this.list.splice(i,1)
+                            return true;
+                        }
+                    })
+                },
+
+                search(keywords) {
+                    return this.list.filter((item) => {
+                        if (item.name.includes(keywords)) {
+                            return item;
+                        } 
+                    });
+                }
+            },
+            //添加私有过滤器
+            filters: {
+
+            },
+            //Vue 中，所有的指令都以 v-开头
+            //私有指令
+            directives: {
+
+            },
+            //-----------------------------------------
+
+            //Vue实例的生命周期钩子
+            beforeCreate() {
+                //在此函式中，实例的 data methods 都没有初始化
+            },
+            created() {
+                //在此函数中，实例数据乙腈可以操作赋值
+            },
+            beforeMount () {
+                //第三个生命周期函数，表示模板已经在内存中编辑完成了，但是尚未把模板渲染到内存中。
+            },
+            mounted () {
+                //内存中的模板已经挂载在页面中
+            }
+        });
+
+        
+
+    </script>
+
+</body>
+</html>
