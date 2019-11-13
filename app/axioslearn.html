@@ -106,11 +106,85 @@
         //promise对象封装一个异步操作并可以获取其结果
         /*
         promise状态的改变：
-                    ~~>(fulfill) settled  --成功结果数据：value
+                    ~~>(fulfill) 执行了 resolve()  --成功结果数据：value
         pending ~~
-                    ~~>(reject) settled  --失败的结果数据：reason
+                    ~~>(reject) 执行了 reject()  --失败的结果数据：reason
         ****只有这两种变化
         */
+        //promise 的基本使用
+        //1. 创建一个 Promise 对象
+
+        const p = new Promise((resolve, reject) => {
+            // 2. 执行异步操作
+
+            setTimeout(() => {
+                const time = Date.now();
+                if (time % 2 == 0) {
+                    // 3.1. 如果成功了，调用 resolve(value)
+                    resolve('成功的数据，time = ' + time);
+                } else {
+                    // 3.2. 如果失败了，调用 reject(reason)
+                    reject('失败的数据，time = ' + time);
+                }
+            }, 1000)
+
+
+        });
+
+        p.then(
+            value => {
+                console.log('成功的回调', value);
+            },
+            reason => {
+                console.log('失败的回调', reason);
+            }
+        );
+
+        //和传统方式比，即异步操作必须在开始操作之前指定回调函数，
+        //Promise可以在任务启动后甚至是有了结果之后再指定回调函数
+
+        //此外，Promise 可以解决回调地狱的问题
+        //e.g.
+        doSomething()
+        .then(function(result){
+            return doSomethingElse(result);
+        })
+        .then(function (NewResult) {
+            return doTirdThing(newResult);
+        })
+        .then(function (finalResult) {
+            console.log('最终的结果' + finalResult);
+        })
+        .catch(failureCallback);
+
+        //或者使用async / await
+        //e.g.
+        async function request() {
+            try {
+                const result = await doSomething();
+                const newResult = await doSomthingElse(result);
+                const finalResult = await doTirdThing(newResult);
+                console.log(finalResult);
+            } catch (error) {
+                failureCallback(error);
+            }
+        }
+
+        //Promise 的API说明
+        //Promise的函数对象方法：
+        /*
+            Promise.all(iterable)
+            Promise.race(iterable)
+            Promise.reject(reason)
+            Promise.resolve(value)
+        */
+        //Promise的对象方法
+        /*
+            Promise.prototype.then(onFulfilled, onRejected)
+            Promise.prototype.catch(onRejected)
+            Promise.prototype.finally(onFinally)
+        */
+
 
 
         //============================================
