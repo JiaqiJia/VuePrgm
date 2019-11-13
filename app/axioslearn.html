@@ -5,16 +5,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>练习使用axios.js</title>
-
-    <script src="../script/vue.js"></script>
-    <script src="../script/axios.js"></script>
-
+    <script src="https://cdn.bootcss.com/vue/2.6.10/vue.min.js"></script>
+    <script src="https://cdn.bootcss.com/axios/0.19.0/axios.min.js"></script>
 </head>
 <body>
     <div id="app">
-        <input type="button" value="点击" title="实验的button">
+        查询：<input type="text" id="qName" value=""><br>
+        Name: <input type="text" id="info1" value=""> <br>
+        Type: <input type="text" id="info2" value=""><br>
+
+        <input type="button" value="query" title="Query" onclick="query()">
+        <input type="button" value="update" title="Update" onclick="update()">
+        <input type="button" value="create" title="Create" onclick="create()">
+        <input type="button" value="delete" title="Delete" onclick="del()"><br>
+
+        <br>
+        <p id="returnValue">返回的内容显示在这里</p>
         
     </div>
+
 
     <script>
         //程序环境搭建：
@@ -24,6 +33,25 @@
                 message: "显示内容"
             }
         })
+
+
+        function query() {
+            var val = document.getElementById("qName").value;
+            console.log(val);
+            axios.get("http://localhost:8989/users/?name=" + val)
+            .then(function (result) {
+                document.getElementById("returnValue").innerHTML = result.data[0];
+            })
+        }
+
+        function create() {
+            var name = document.getElementById("info1").value;
+            var type = document.getElementById("info2").value;
+            axios.post("/users", {"name": name, "type": type})
+            .then(function (value) {
+                document.getElementById("returnValue").innerHTML = value.toString();
+            })
+        }
 
         // 2.1 使用axios框架
         // 2.2 学习使用JSON解析
@@ -35,7 +63,7 @@
         /*
             异步的层级关系：
             XMLHttpRequest
-            ||
+            +
             Promise
             ||
             axios
@@ -53,6 +81,72 @@
         var a = 1, b = 2, c = 3;
         const fn = new Fn(a, b, c);
         console.log(Fn.prototype);
+        
+        //使用XHR和XHR的API
+        //创建XHR对象
+        const xhr = new XMLHttpRequest();
+        //主要属性：
+        /*
+           ******注意： 属性中除了 onreadystatechange 外，其余属性都是只读的********
+            onreadystatechange  //当 readyState 的值改变的时候其值所指向的 callback 会被调用
+            readyState       // 0 -> 还未调用 open 1 -> open已被调用 2 -> send已被调用，头部和状态已经可获得 3 -> 下载中 4 -> 下载操作已完成
+            responseType        //"" == "text", 返回的是 DOMString 中的文本；
+                              "json", 返回的是一个JS对象， 该对象是通过解析 JSON 得到的
+                              "blob", 返回一个包含二进制数据的 Blob 的对象。
+                              "document", HTML 或 XML 文件
+            responseText    //返回一个DOMString
+            response        //response 本身的内容
+            responseURL     //响应的序列化URL
+            status          //对应 的返回状态 的状态的数字， e.g. 200 是成功， 404 资源没找到
+        */
+
+        //主要的事件
+        /*
+            //事件处理： 
+            //使用 addEventListener(type, listener) API 来监听 XMLHttpRequest 事件
+
+            //event 的类型  |(=> 对应的属性)   |  解释
+            //-------------|-----------------|------------------
+            //abort        |(=> onabort)     |  request被终止时
+            //error        |(=> onerror)     |  request遇到错误时
+            //load         |(=> onload)      |  请求载入完成，此时的 readyState 为 4  
+            //loadend      |(=> onloadend)   |  请求结束时，无论成功还是失败
+            //loadstart    |(=> onloadstart) |  接收到响应数据时触发
+            //progress     |(=> onprogress)  |  回应下载当中，readyState 为 3   
+            //timeout      |(=> ontimeout)   |  请求超时时触发
+
+        */
+
+        //XHR 的使用流程
+        /*
+            1. 初始化对象
+            2. 挂载 监听/回调函数
+            3. open() 打开链接  ==> open() 之后状态为 1
+            4. send() 发送请求  ==> send() 之后状态为 2
+        */
+
+        //主要的方法：
+        /*
+            open()  初始化一个请求
+                xhrReq.open(method, url);
+                xhrReq.open(method, url, async);
+                xhrReq.open(method, url, async, user);
+                xhrReq.open(method, url, async, user, password);
+            ** async 参数默认为 true
+            ** method 包括 GET POST PUT DELETE 等
+
+            setRequestHeader() 设置请求头的值，必须在 open() 之后，send() 之前使用。
+                params： header: 属性名称, value: 属性值
+
+            send()  发送请求，异步请求回立即返回。
+
+            abort() 若请求已发送，中止请求
+
+            getAllResponseHeader() 得到所有的响应头，各个头之间用 "r\n\" 分隔
+
+            getResponseHeader() 根据参数的属性名，直接获得相应的头值。
+
+        */
 
 
 
@@ -149,26 +243,38 @@
         .then(function(result){
             return doSomethingElse(result);
         })
-        .then(function (NewResult) {
-            return doTirdThing(newResult);
+        .then(function (newResult) {
+            return doThirdThing(newResult);
         })
         .then(function (finalResult) {
             console.log('最终的结果' + finalResult);
         })
-        .catch(failureCallback);
+        .catch(failureCallback());
 
         //或者使用async / await
         //e.g.
         async function request() {
             try {
                 const result = await doSomething();
-                const newResult = await doSomthingElse(result);
-                const finalResult = await doTirdThing(newResult);
+                const newResult = await doSomethingElse(result);
+                const finalResult = await doThirdThing(newResult);
                 console.log(finalResult);
             } catch (error) {
                 failureCallback(error);
             }
         }
+
+        function doSomething(){
+            var result = Promise.resolve(1);
+            return result;
+        };
+        function doSomethingElse(result) {
+            return result;
+        };
+        function doThirdThing(result) {
+            return result;
+        };
+        function failureCallback(){};
 
         //Promise 的API说明
         //Promise的函数对象方法：
@@ -189,7 +295,7 @@
 
         //============================================
         //使用Axios
-
+        
 
 
     </script>
