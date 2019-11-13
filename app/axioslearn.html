@@ -34,13 +34,65 @@
             }
         })
 
+        axios.defaults.baseURL = "http://localhost:8989";
+        function getV(eleId) {
+            return document.getElementById(eleId).value;
+        }
 
         function query() {
             var val = document.getElementById("qName").value;
-            console.log(val);
-            axios.get("http://localhost:8989/users/?name=" + val)
+            axios.get("/users/?name=" + val)
             .then(function (result) {
-                document.getElementById("returnValue").innerHTML = result.data[0];
+                console.log(result.data[0])
+                document.getElementById("returnValue").innerHTML = JSON.stringify(result.data[0]);
+            })
+        }
+
+        function update() {
+            var name = getV("info1");
+            var type = getV("info2");
+
+            var qname = getV("qName");
+            var res = null;
+
+            axios({
+                method: 'get',
+                url: '/users?name=' + qname,
+            }).then(function (result) {
+                res = result.data;
+                if (res.length == 0) {
+                    document.getElementById("returnValue").innerHTML = "无此用户";
+                    return;
+                } else {
+                    var obj = {name: "", type: ""};
+                    //obj.name = res[0].name; 
+                    //obj.type = res[0].type;
+                    if (getV("info1") != "") {
+                       obj.name = getV("info1"); 
+                    }
+                    if (getV("info2") != "") {
+                       obj.type = getV("info2");
+                    }
+                    if (obj.name == "" && obj.type == "") {
+                        document.getElementById("returnValue").innerHTML = "无可修改项";
+                        return;
+                    } else {
+    
+                        if (obj.name == "") {
+                            obj.name = res[0].name;
+                        }
+                        if (obj.type == "") {
+                            obj.type = res[0].type;
+                        }
+
+                        console.log(obj);
+                        axios({
+                            method: 'put',
+                            url: '/users/' + res[0].id,
+                            data: obj
+                        })
+                    }
+                }
             })
         }
 
@@ -49,8 +101,12 @@
             var type = document.getElementById("info2").value;
             axios.post("/users", {"name": name, "type": type})
             .then(function (value) {
-                document.getElementById("returnValue").innerHTML = value.toString();
+                document.getElementById("returnValue").innerHTML = value.data.name;
             })
+        }
+
+        function del(){
+            axios.delete("/users?name=" + getV("qName"));
         }
 
         // 2.1 使用axios框架
