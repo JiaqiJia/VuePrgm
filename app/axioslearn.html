@@ -21,6 +21,10 @@
 
         <br>
         <p id="returnValue">返回的内容显示在这里</p>
+
+        <hr>
+        <p>自定义路由的使用</p>
+        <input id="wc" type="button" value="使用通配符" onclick="useWildCard()"><br>
         
     </div>
 
@@ -34,81 +38,7 @@
             }
         })
 
-        axios.defaults.baseURL = "http://localhost:8989";
-        function getV(eleId) {
-            return document.getElementById(eleId).value;
-        }
-
-        function query() {
-            var val = document.getElementById("qName").value;
-            axios.get("/users/?name=" + val)
-            .then(function (result) {
-                console.log(result.data[0])
-                document.getElementById("returnValue").innerHTML = JSON.stringify(result.data[0]);
-            })
-        }
-
-        function update() {
-            var name = getV("info1");
-            var type = getV("info2");
-
-            var qname = getV("qName");
-            var res = null;
-
-            axios({
-                method: 'get',
-                url: '/users?name=' + qname,
-            }).then(function (result) {
-                res = result.data;
-                if (res.length == 0) {
-                    document.getElementById("returnValue").innerHTML = "无此用户";
-                    return;
-                } else {
-                    var obj = {name: "", type: ""};
-                    //obj.name = res[0].name; 
-                    //obj.type = res[0].type;
-                    if (getV("info1") != "") {
-                       obj.name = getV("info1"); 
-                    }
-                    if (getV("info2") != "") {
-                       obj.type = getV("info2");
-                    }
-                    if (obj.name == "" && obj.type == "") {
-                        document.getElementById("returnValue").innerHTML = "无可修改项";
-                        return;
-                    } else {
-    
-                        if (obj.name == "") {
-                            obj.name = res[0].name;
-                        }
-                        if (obj.type == "") {
-                            obj.type = res[0].type;
-                        }
-
-                        console.log(obj);
-                        axios({
-                            method: 'put',
-                            url: '/users/' + res[0].id,
-                            data: obj
-                        })
-                    }
-                }
-            })
-        }
-
-        function create() {
-            var name = document.getElementById("info1").value;
-            var type = document.getElementById("info2").value;
-            axios.post("/users", {"name": name, "type": type})
-            .then(function (value) {
-                document.getElementById("returnValue").innerHTML = value.data.name;
-            })
-        }
-
-        function del(){
-            axios.delete("/users?name=" + getV("qName"));
-        }
-
+        
         // 2.1 使用axios框架
         // 2.2 学习使用JSON解析
         //Promise教程地址： https://www.bilibili.com/video/av75041024?from=search&seid=8714593936565971216  (https://www.bilibili.com/video/av75041024)
@@ -352,7 +282,88 @@
         //============================================
         //使用Axios
         
+        axios.defaults.baseURL = "http://localhost:8989";
+        function getV(eleId) {
+            return document.getElementById(eleId).value;
+        }
 
+        function query() {
+            var val = document.getElementById("qName").value;
+            axios.get("/users/?name=" + val)
+            .then(function (result) {
+                console.log(result.data[0])
+                document.getElementById("returnValue").innerHTML = JSON.stringify(result.data[0]);
+            })
+        }
+
+        function update() {
+            var name = getV("info1");
+            var type = getV("info2");
+
+            var qname = getV("qName");
+            var res = null;
+
+            axios({
+                method: 'get',
+                url: '/users?name=' + qname,
+            }).then(function (result) {
+                res = result.data;
+                if (res.length == 0) {
+                    document.getElementById("returnValue").innerHTML = "无此用户";
+                    return;
+                } else {
+                    var obj = {name: "", type: ""};
+                    //obj.name = res[0].name; 
+                    //obj.type = res[0].type;
+                    if (getV("info1") != "") {
+                       obj.name = getV("info1"); 
+                    }
+                    if (getV("info2") != "") {
+                       obj.type = getV("info2");
+                    }
+                    if (obj.name == "" && obj.type == "") {
+                        document.getElementById("returnValue").innerHTML = "无可修改项";
+                        return;
+                    } else {
+    
+                        if (obj.name == "") {
+                            obj.name = res[0].name;
+                        }
+                        if (obj.type == "") {
+                            obj.type = res[0].type;
+                        }
+
+                        console.log(obj);
+                        axios({
+                            method: 'put',
+                            url: '/users/' + res[0].id,
+                            data: obj
+                        })
+                    }
+                }
+            })
+        }
+
+        function create() {
+            var name = document.getElementById("info1").value;
+            var type = document.getElementById("info2").value;
+            axios.post("/users", {"name": name, "type": type})
+            .then(function (value) {
+                document.getElementById("returnValue").innerHTML = value.data.name;
+            })
+        }
+
+        function del(){
+            axios.delete("/users/7");
+        }
+
+        function useWildCard() {
+            axios.get("/api/users?name=Bill").then(
+                function (result) {
+                    document.getElementById("returnValue").innerHTML = result.data.length;
+                }
+            )
+        }
 
     </script>
 </body>
