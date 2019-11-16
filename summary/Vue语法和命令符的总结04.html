@@ -1,28 +1,269 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>VUE.JS第四部分 组件与路由</title>
+    <title>VUE.JS第四部分 组件</title>
+    <script src="https://cdn.bootcss.com/vue/2.6.10/vue.min.js"></script>
+
+    <style>
+        .red {
+            background-color: grey;
+            color: rgb(0, 0, 0);
+        }
+
+        .active {
+            background-color: rgb(157, 185, 111);
+            font-size: larger;
+        }
+    </style>
 </head>
+
 <body>
 
+
     <div id="app">
+        <h1 ref='mh1'>在VUE中定义并使用Vue组件</h1>
+
+        <button @click="testRef">测试Ref</button>
+
+        <reftest ref='mtest'></reftest>
+
+        <!-- <mycomp></mycomp>
+        <mcompoment3></mcompoment3>
+        <h2>Vue 提供了 component标签用来显示指定的组件</h2>
+        <h2>:is用来指示组件名</h2> -->
+
+        <!-- 注意模板名，组件名的差别 -->
+        <!--
+        <component :is="'lc1'"></component>
+        <component :is="cname"></component>
+        <lc1></lc1>
+        <list-c></list-c>
+        <lc2></lc2>
+        <lc3></lc3> -->
+
+        <!-- 父组件向子组件中传值： -->
+        <!-- 父组件向子组件传递方法 -->
+        <!-- 子组件向父组件传参 -->
+        <h1>父 -> 子</h1>
+
+        <!-- 注意：绑定的父函数如果有参数 只要求函数名，不用添加括号。添加括号会导致参数又变为空 -->
+        <!-- 在这里还处于父组件的作用域，传递进来的参数需是父组件中的变量 -->
+        <com1 v-bind:pmsg="msg" @func="clicktest()" @func2="doubleclickt"></com1>
+        <!-- 改变 props 并不会产生持久效果 -->
+        <a href="#" @click.prevent="pChange()">{{rerenderM}}</a>
+
 
     </div>
 
+
+
+    <!-- =============================================
+                            模板部分
+            模板及可以用于公共组件，也可以用于私有组件
+        =============================================
+     -->
+    <template id="mcmp3">
+        <div>
+            <h4>这是使用第三种方法创建的组件</h4>
+            <p>some cottent here</p>
+            <ol>
+                <li>line 1</li>
+                <li>line 2</li>
+                <li>line 3</li>
+                <li>line 4</li>
+                <li>line 5</li>
+                <li>line 6</li>
+            </ol>
+        </div>
+    </template>
+
+    <template id="lctest">
+        <div class="red">
+            <p>公共组件无法访问到私有组件的变量值</p>
+            <h4 class="active">组件的生命周期</h4>
+            <ol>
+                <li v-for="i in 6">{{i}}</li>
+            </ol>
+        </div>
+    </template>
+
+    <template id="lctest2">
+        <div class="red">
+            <p>私有组件也无法直接访问到私有对象的变量值</p>
+            <h4 class="active">组件的生命周期</h4>
+            <ol>
+                <li v-for="i in 6">{{i}}</li>
+            </ol>
+        </div>
+    </template>
+
+    <template id="lctest3">
+        <div :[attrc]="valuec">
+            <p>私有组件可以直接访问到自己data对象的变量值</p>
+            <h4 class="active">组件的生命周期</h4>
+            <ol>
+                <li v-for="i in 6">{{i}}</li>
+            </ol>
+            <p>测试绑定对象中的变量：{{testc}}</p>
+        </div>
+    </template>
+
+    <template id='functrans'>
+        <div>
+            <!-- 在这里已经进入子组件的作用域， 可以直接使用子组件的数据变量 -->
+            <!-- 会直接用在函数调用当中 -->
+            <h1 @click="change()"> 这是子组件 ----- {{pmsg}} </h1>
+            <button @click="dc(title, type)">点击传递父组件方法</button>
+        </div>
+    </template>
+
+    <template id='reftest'>
+        <h1>
+            使用组件的测试
+        </h1>
+    </template>
+
+
+    <!-- ||||||||||||||||||--------脚本部分--------|||||||||||||||||||| -->
+
     <script>
+
+        /*
+            =============================
+                    注册的公共组件
+            =============================
+        */
+
+        //创建组件的第一种方式
+        // var com1 = Vue.extend({
+
+        //     template: '<h3>创建的组件</h3>'
+        // })
+
+        // Vue.component("mycomp", com1);
+
+        //第二种方式：直接在组件方法中注册
+        Vue.component("mycomp", {
+            template: '<h3>创建的组件</h3>'
+        });
+
+        //**注意，组件中，template 属性中，有且只有唯一一个根元素
+
+        //第三种方式
+        Vue.component("mcompoment3", {
+            template: "#mcmp3"
+        })
+
+        Vue.component("lc1", {
+            template: "#lctest"
+        })
+
+        var reftest = {
+            template: '#reftest',
+            methods: {
+                refmtest() {
+                    console.log("引用了ref");
+                }
+            }
+        }
+
+        // ||||||||||||||||||--------Vue实例--------||||||||||||||||||||
         var vm = new Vue({
             el: "#app",
             data: {
-
+                attr: "class",
+                value: "red",
+                cname: "lc3",
+                msg: "来自父组件",
+                rerenderM: "这里"
             },
             methods: {
+                pChange() {
+                    this.rerenderM = "哪里";
+                },
 
+                //负组件中方法添加参数 供子组件调用 就实现了子组件向父组件传参。
+                clicktest() {
+                    console.log("父组件方法");
+                },
+
+                doubleclickt(d1, d2) {
+                    console.log("父" + d1 + d2);
+                },
+
+                testRef() {
+                    console.log(this.$refs.mh1.innerHTML);
+                    this.$refs.mtest.refmtest();
+                }
+
+            },
+
+            components: {
+
+                //父组件向子组件传值的问题
+                //Vue实例也可以看作是组件
+                com1: {
+                    data: function () {
+                        return {
+                            title: 'abc',
+                            type: 123,
+                            cd1: 'd1',
+                            cd2: 'd2'
+                        }
+                    },
+
+                    template: '#functrans',
+                    //父组件向子组件传值
+                    //props中的数据都是只读不写的,
+                    //不建议直接改变props里面的内容，因为并没有对父组件中的值造成任何改变。
+                    props: ['pmsg'],
+                    methods: {
+                        change() {
+                            this.pmsg = "改变了";
+                        },
+                        cclicktest() {
+                            this.$emit('func')
+                        },
+                        dc(d1, d2) {
+                            this.$emit("func2", d1, d2)
+                        }
+
+                    }
+                },
+
+                //组件注册的简写形式，以及 ref 属性的使用
+                reftest, //必须有同名全局变量已经赋值好模板
+
+
+                //当组件命名采用驼峰写法时，页面的标签中要全部大写且用"-" 分隔开
+                listC: {
+                    template: "<h1>私有组件注册</h1>"
+                },
+
+                lc2: {
+                    template: "#lctest2"
+                },
+                lc3: {
+                    //组件也可以有自己的data对象，但是这个data对象必须通过data函数返回
+                    //将对象在全局定义并赋引用值，可以保证所有相关组件的信息同步
+                    //用这种方法也可以实现对象数据和组件数据的同步
+                    data() {
+                        return {
+                            attrc: "class",
+                            valuec: "red",
+                            testc: 10
+                        }
+                    },
+                    template: "#lctest3"
+                }
             }
         })
     </script>
-    
+
 </body>
+
 </html>
