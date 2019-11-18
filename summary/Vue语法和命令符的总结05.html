@@ -8,25 +8,149 @@
     <title>VUE.JS第五部分 路由</title>
     <script src="https://cdn.bootcss.com/vue/2.6.10/vue.min.js"></script>
     <script src="https://cdn.bootcss.com/vue-router/3.1.3/vue-router.min.js"></script>
+    <style>
+        .mactive {
+            color: lightcoral;
+            font-weight: 600;
+            background-color: lightskyblue;
+        }
+    </style>
 </head>
-
-    <div id="app">
-
-    </div>
 
 <body>
 
+    <div id="app">
+
+
+        <h2>使用路由</h2>
+        <!-- <a href="#/login">登录</a>
+        <a href="#/register">注册</a> -->
+        <!-- 使用router-link -->
+        <!-- 可以使用 tag 属性来指定编译出来的标签，默认是 a 标签 -->
+        <!-- 使用 router-link-exact-active 或者 router-link-active 来指定选中状态的样式。 -->
+        <!-- 如果在路由中使用查询字符串，可以通过路由传递参数 -->
+        <router-link to="/login?id=10">登录</router-link>
+        <router-link to="/register/12/Rose">注册</router-link>
+        <router-link to="/account">账户</router-link>
+        <!--显示的占位符, 由vue-router 提供，匹配到的组件会填充到 router-view 中-->
+        <router-view></router-view>
+        
+        <!-- 使用组件直接显示 -->
+        <hr>
+        <h2>直接使用组件</h2>
+        <a href="#" @click.prevent="toLogin()">登录</a>
+        <a href="#" @click.prevent="toRegister()">注册</a>
+        <login v-show="showFlag"></login>
+        <register v-show="!showFlag"></register>
+        
+    </div>
+    
+    <template id='clogin'>
+        <div>
+            <h4>登录组件</h4>
+            <p>这是一个登陆组件</p>
+        </div>
+    </template>
+    
+    <template id='cregister'>
+        <div>
+            <h4>注册组件</h4>
+            <p>这是一个注册组件: param {{$route.params.id}} </p>
+        </div>
+    </template>
+
+    <template id='account'>
+        <div>
+            <h1>账户父组件</h1>
+            <router-link to="/account/first">第一</router-link>
+            <router-link to="/account/second">第二</router-link>
+            <router-view></router-view>
+        </div>
+    </template>
+
+
     <script>
+
+        //vue-router 是另一个 页面切换插件，主要用于单页面应用。
+        //vue-router 依赖于Vue。
+
+        //1. 路由的基本使用 使用 VueRouter 
+
+        //加入组件
+        var account = {
+            template: '#account'
+        }
+
+        var first = {
+            template: '<h3>第一</h3>'
+        }
+
+        var second = {
+            template: '<h3>第二</h3>'
+        }
+
+        const login = {
+            template: '#clogin',
+            created() {
+                console.log(this.$route);
+            }
+        }
+
+        const register = {
+            template: '#cregister',
+            created() {
+                console.log(this.$route.params.id);
+            }
+        }
+
+
+        var routerObj = new VueRouter({
+            routes: [
+
+                //{ path: '/', redirect: "/login"},
+                { path: '/login', component: login },
+                //路由的 param
+                { path: '/register/:id/:name', component: register },
+                {
+                    path: '/account',
+                    component: account,
+                    children: [
+                        { path: 'first', component: first },
+                        { path: 'second', component: second }
+                    ]
+                }
+            ],
+
+            //在这里添加属性来实现绑定选中项的自定义样式类
+            linkActiveClass: 'mactive'
+        })
         var vm = new Vue({
             el: "#app",
             data: {
-
+                showFlag: true
             },
 
             methods: {
-                
-            }
+                toLogin() {
+                    this.showFlag = true;
+                },
+
+                toRegister() {
+                    this.showFlag = false;
+                }
+
+            },
+
+            //通过注册组件的方式使用。
+            components: {
+                login,
+                register
+            },
+
+            router: routerObj
         })
+
+
     </script>
 </body>
 

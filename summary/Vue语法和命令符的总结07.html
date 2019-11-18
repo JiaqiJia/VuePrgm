@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>VUE.JS第七部分 watch 和 computed</title>
+    <script src="https://cdn.bootcss.com/vue/2.6.10/vue.min.js"></script>
+    <script src="https://cdn.bootcss.com/vue-router/3.1.3/vue-router.min.js"></script>
+</head>
+<body>
+    <div id="app">
+
+    </div>
+    <script>
+
+        const routerObj = new VueRouter({
+            
+        })
+
+        var vm = new Vue({
+            el: '#app',
+            data: {
+                msg: '一些信息'
+            },
+            methods: {
+
+            },
+            components: {
+                
+            },
+            router = routerObj,
+
+            //新内容
+            watch: {
+                //监视data中指定data属性的变化，然后用对应的 function进行处理
+                msg: function (newVal, oldVal) {
+                    console.log('发生了改变: ' + newVal + '=>' + oldVal);
+                }
+            },
+
+            computed: {
+                //以属性的方式缓存函数结果， 引用时不用加括号。
+                //函数中任何一个变量发生变化，都会进行从新计算，同时结果被缓存起来
+                //任何其他的引用，只要没有引起其中值的变化， 都不会再计算
+
+                newMsg: function () {
+                    console.log('hello' + this.msg);
+                    return "newMsg";
+                }
+            }
+        })
+    </script>
+</body>
+</html>
