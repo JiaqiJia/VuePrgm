@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Vue表单绑定的练习</title>
+    <script src="https://cdn.bootcss.com/vue/2.6.10/vue.min.js"></script>
+</head>
+
+<body>
+    <div id="app">
+        <input type="checkbox" id="jack" value="AAA" v-model="checkedNames">
+        <label for="jack">Jack</label>
+        <input type="checkbox" id="john" value="BBB" v-model="checkedNames">
+        <label for="john">John</label>
+        <input type="checkbox" id="mike" value="CCC" v-model="checkedNames">
+        <label for="mike">Mike</label>
+        <br>
+        <span>Checked names: {{ checkedNames }}</span>
+    </div>
+    <script>
+        var vm = new Vue({
+            el: "#app",
+            data: {
+                checkedNames: [],
+            }
+        })
+    </script>
+</body>
+
+</html>
